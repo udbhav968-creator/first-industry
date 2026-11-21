@@ -1,0 +1,10 @@
+{
+  "name": "@tech-stack-issues-finder/tests",
+  "private": true,
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "scripts": {
+    "test": "node --env-file-if-exists=../../.env anthropic-smoke.mjs"
+  }
+}
