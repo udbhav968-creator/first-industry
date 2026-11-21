@@ -1,0 +1,82 @@
+[
+  {
+    "id": "eval-01",
+    "component": "node",
+    "version": "18.15.0",
+    "expected_cve": "CVE-2023-32006",
+    "should_match": true,
+    "description": "Node 18.15.0 is in range >= 18.0.0, < 18.16.1 (vulnerable)"
+  },
+  {
+    "id": "eval-02",
+    "component": "node",
+    "version": "18.17.0",
+    "expected_cve": "CVE-2023-32006",
+    "should_match": false,
+    "description": "Node 18.17.0 is patched against CVE-2023-32006 (fixed in 18.16.1)"
+  },
+  {
+    "id": "eval-03",
+    "component": "node",
+    "version": "18.15.0",
+    "expected_cve": "CVE-2023-45853",
+    "should_match": false,
+    "description": "Node 18.x is NOT affected by Node 20 HTTP DoS CVE-2023-45853 (Issue B-3.3)"
+  },
+  {
+    "id": "eval-04",
+    "component": "node",
+    "version": "20.5.0",
+    "expected_cve": "CVE-2023-45853",
+    "should_match": true,
+    "description": "Node 20.5.0 is in range >= 20.0.0, < 20.8.1 (vulnerable)"
+  },
+  {
+    "id": "eval-05",
+    "component": "react",
+    "version": "17.0.2",
+    "expected_cve": "CVE-2022-21703",
+    "should_match": true,
+    "description": "React 17.0.2 is in range >= 17.0.0, < 17.0.3 (vulnerable)"
+  },
+  {
+    "id": "eval-06",
+    "component": "react",
+    "version": "18.2.0",
+    "expected_cve": "CVE-2022-21703",
+    "should_match": false,
+    "description": "React 18.2.0 is NOT affected by React 17 XSS CVE-2022-21703"
+  },
+  {
+    "id": "eval-07",
+    "component": "git",
+    "version": "2.25.0",
+    "expected_cve": "CVE-2020-5260",
+    "should_match": true,
+    "description": "Git 2.25.0 is < 2.26.1 (credential leak vulnerability)"
+  },
+  {
+    "id": "eval-08",
+    "component": "git",
+    "version": "2.35.0",
+    "expected_cve": "CVE-2020-5260",
+    "should_match": false,
+    "description": "Git 2.35.0 is patched against CVE-2020-5260"
+  },
+  {
+    "id": "eval-09",
+    "component": "docker",
+    "version": "24.0.5",
+    "expected_cve": "CVE-2024-21626",
+    "should_match": true,
+    "description": "Docker 24.0.5 runc breakout vulnerability (< 25.0.2)"
+  },
+  {
+    "id": "eval-10",
+    "component": "docker",
+    "version": "25.0.3",
+    "expected_cve": "CVE-2024-21626",
+    "should_match": false,
+    "description": "Docker 25.0.3 patched against CVE-2024-21626"
+  }
+]

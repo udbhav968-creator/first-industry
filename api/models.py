@@ -28,6 +28,8 @@ class Finding(BaseModel):
     fixed_in: Optional[str] = None
     end_of_life_date: Optional[str] = None
     description: str
+    impact_score: Optional[int] = Field(default=None, description="Impact score (1-5)")
+    effort_score: Optional[int] = Field(default=None, description="Upgrade effort score (1-5)")
 
 class SeverityDistribution(BaseModel):
     critical: int = 0

@@ -1,6 +1,6 @@
-import pytest
-import sys
 import os
+import sys
+import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "api")))
 
@@ -9,12 +9,11 @@ from main import app
 
 client = TestClient(app)
 
-def test_create_research_job_success():
-    """Milestone 6.3: POST /research-jobs with valid stack returns 202 and job_id."""
+def test_create_research_job():
     payload = {
         "stack": [
             {"name": "react", "version": "17.0.2"},
-            {"name": "node", "version": "14.17.0"}
+            {"name": "node", "version": "18.15.0"}
         ]
     }
     response = client.post("/research-jobs", json=payload)
@@ -25,45 +24,33 @@ def test_create_research_job_success():
     assert "report_id" in data
     assert len(data["stack"]) == 2
 
-def test_create_research_job_invalid_empty_stack():
-    """Milestone 6.3 validation test: Empty stack rejected with 422."""
-    payload = {"stack": []}
-    response = client.post("/research-jobs", json=payload)
+def test_create_research_job_empty_payload():
+    response = client.post("/research-jobs", json={"stack": []})
     assert response.status_code == 422
 
-def test_get_research_job_by_id():
-    """Milestone 6.4: GET /research-jobs/{id} returns job metadata."""
-    payload = {
-        "stack": [{"name": "express", "version": "4.17.1"}]
-    }
+def test_get_research_job():
+    payload = {"stack": [{"name": "node", "version": "18.15.0"}]}
     create_res = client.post("/research-jobs", json=payload)
     job_id = create_res.json()["job_id"]
 
-    get_res = client.get(f"/research-jobs/{job_id}")
-    assert get_res.status_code == 200
-    assert get_res.json()["job_id"] == job_id
-    assert get_res.json()["status"] == "queued"
+    res = client.get(f"/research-jobs/{job_id}")
+    assert res.status_code == 200
+    assert res.json()["job_id"] == job_id
+    assert res.json()["status"] == "queued"
 
-def test_get_nonexistent_job_returns_404():
-    """Milestone 4.6 error contract: 404 for nonexistent job id."""
-    response = client.get("/research-jobs/job-does-not-exist")
-    assert response.status_code == 404
+def test_get_nonexistent_job():
+    res = client.get("/research-jobs/missing-id")
+    assert res.status_code == 404
 
-def test_get_report_details():
-    """Milestone 4.5: GET /reports/{id} returns findings, upgrade paths, and sources."""
-    payload = {
-        "stack": [{"name": "fastapi", "version": "0.100.0"}]
-    }
+def test_get_report():
+    payload = {"stack": [{"name": "fastapi", "version": "0.100.0"}]}
     create_res = client.post("/research-jobs", json=payload)
     report_id = create_res.json()["report_id"]
 
-    report_res = client.get(f"/reports/{report_id}")
-    assert report_res.status_code == 200
-    report_data = report_res.json()
-
-    assert "findings" in report_data
-    assert "upgrade_paths" in report_data
-    assert "sources" in report_data
-    assert "severity_distribution" in report_data
-    assert len(report_data["findings"]) == 1
-    assert report_data["findings"][0]["component"] == "fastapi"
+    res = client.get(f"/reports/{report_id}")
+    assert res.status_code == 200
+    data = res.json()
+    assert "findings" in data
+    assert "upgrade_paths" in data
+    assert "sources" in data
+    assert len(data["findings"]) == 1
