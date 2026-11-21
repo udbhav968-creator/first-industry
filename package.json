@@ -1,0 +1,15 @@
+{
+  "name": "tech-stack-issues-finder-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo workspace for Group 2 Tech Stack Issues Finder",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down",
+    "smoke:searxng": "./scripts/smoke_test_searxng.sh",
+    "smoke:crawl4ai": "./scripts/smoke_test_crawl4ai.sh"
+  }
+}

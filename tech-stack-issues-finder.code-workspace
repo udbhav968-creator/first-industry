@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": "."
+    },
+    {
+      "name": "web",
+      "path": "packages/web"
+    },
+    {
+      "name": "api",
+      "path": "packages/api"
+    },
+    {
+      "name": "tests",
+      "path": "packages/tests"
+    },
+    {
+      "name": "infra",
+      "path": "infra"
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "files.exclude": {
+      "**/.git": true,
+      "**/__pycache__": true,
+      "**/.venv": true,
+      "**/node_modules": true
+    }
+  }
+}
