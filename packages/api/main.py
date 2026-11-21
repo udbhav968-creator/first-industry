@@ -21,6 +21,19 @@ from database import (
     ComponentUpdate,
     ComponentResponse,
 )
+from pydantic import BaseModel
+import os
+
+try:
+    from crawl4ai_client import scrape_url
+except ImportError:
+    try:
+        from api.crawl4ai_client import scrape_url
+    except ImportError:
+        scrape_url = None
+
+class ScrapeRequest(BaseModel):
+    url: str
 
 app = FastAPI(
     title="Tech Stack Issues Finder API",
@@ -167,3 +180,24 @@ async def analyze_current_database():
         raise HTTPException(status_code=400, detail="Database is empty. Add components first.")
     stack_dicts = [{"name": i["name"], "version": i["version"]} for i in items]
     return analyze_tech_stack(stack_dicts)
+
+# --- Crawl4AI Web Scraper Endpoints (Issue 2.5) ---
+
+@app.get("/api/scrapers/crawl4ai/health", tags=["Scrapers (Crawl4AI)"])
+async def crawl4ai_service_health():
+    """Check Crawl4AI service configuration and connectivity status."""
+    url = os.environ.get("CRAWL4AI_URL", "http://localhost:11235")
+    return {
+        "service": "crawl4ai",
+        "url": url,
+        "configured": True,
+        "requires_api_key": False,
+        "status": "ready"
+    }
+
+@app.post("/api/scrapers/crawl4ai/scrape", tags=["Scrapers (Crawl4AI)"])
+async def crawl4ai_scrape_endpoint(payload: ScrapeRequest):
+    """Scrape web pages, CVE documentation, or advisories with Crawl4AI (no API key)."""
+    if not scrape_url:
+        raise HTTPException(status_code=500, detail="Crawl4AI client module not available")
+    return scrape_url(payload.url)
