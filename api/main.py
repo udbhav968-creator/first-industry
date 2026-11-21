@@ -15,6 +15,12 @@ from models import (
     ErrorResponse,
 )
 from research_engine import analyze_tech_stack
+from database import (
+    db,
+    ComponentCreate,
+    ComponentUpdate,
+    ComponentResponse,
+)
 
 app = FastAPI(
     title="Tech Stack Issues Finder API",
@@ -107,3 +113,57 @@ async def get_report(report_id: str):
             detail=f"report '{report_id}' not found",
         )
     return ReportResponse(**report)
+
+# --- In-Memory Database CRUD Endpoints (GET, POST, PUT, DELETE) ---
+
+@app.get("/api/components", response_model=List[ComponentResponse], tags=["Components (In-Memory DB)"])
+async def list_components(category: Optional[str] = None):
+    """GET: List all components currently stored in memory."""
+    return db.list_all(category=category)
+
+@app.get("/api/components/{component_id}", response_model=ComponentResponse, tags=["Components (In-Memory DB)"])
+async def get_component(component_id: str):
+    """GET: Retrieve a single component by its ID."""
+    item = db.get_by_id(component_id)
+    if not item:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Component '{component_id}' not found",
+        )
+    return item
+
+@app.post("/api/components", response_model=ComponentResponse, status_code=status.HTTP_201_CREATED, tags=["Components (In-Memory DB)"])
+async def create_component(payload: ComponentCreate):
+    """POST: Add a new component to the in-memory database."""
+    return db.create(payload)
+
+@app.put("/api/components/{component_id}", response_model=ComponentResponse, tags=["Components (In-Memory DB)"])
+async def update_component(component_id: str, payload: ComponentUpdate):
+    """PUT: Update an existing component in memory."""
+    updated = db.update(component_id, payload)
+    if not updated:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Component '{component_id}' not found",
+        )
+    return updated
+
+@app.delete("/api/components/{component_id}", tags=["Components (In-Memory DB)"])
+async def delete_component(component_id: str):
+    """DELETE: Remove a component from the in-memory database."""
+    success = db.delete(component_id)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Component '{component_id}' not found",
+        )
+    return {"message": "Component deleted successfully", "id": component_id}
+
+@app.post("/api/components/analyze", tags=["Components (In-Memory DB)"])
+async def analyze_current_database():
+    """Run research analysis on all components currently in the database."""
+    items = db.list_all()
+    if not items:
+        raise HTTPException(status_code=400, detail="Database is empty. Add components first.")
+    stack_dicts = [{"name": i["name"], "version": i["version"]} for i in items]
+    return analyze_tech_stack(stack_dicts)
