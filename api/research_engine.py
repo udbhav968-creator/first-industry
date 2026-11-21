@@ -2,6 +2,14 @@ import re
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
+try:
+    from searxng_client import search_searxng
+except ImportError:
+    try:
+        from api.searxng_client import search_searxng
+    except ImportError:
+        search_searxng = None
+
 EOL_DATABASE: Dict[str, Dict[str, str]] = {
     "node": {
         "14": "2023-04-30",
@@ -220,6 +228,12 @@ def analyze_tech_stack(stack: List[Dict[str, str]]) -> Dict:
 
         sources.add(f"https://nvd.nist.gov/vuln/search/results?query={comp_name}")
         sources.add(f"https://endoflife.date/{comp_name}")
+
+        if search_searxng:
+            searx_results = search_searxng(f"{comp_name} {version} CVE vulnerability", max_results=2)
+            for s_res in searx_results:
+                if s_res.get("url"):
+                    sources.add(s_res["url"])
 
         eol_info = check_eol_status(comp_name, version)
         eol_date = eol_info["eol_date"] if eol_info else None

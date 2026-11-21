@@ -1,0 +1,22 @@
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "techstack-issues-finder-searxng"
+
+server:
+  secret_key: "techstack_searxng_secret_key_change_in_production"
+  bind_address: "0.0.0.0"
+  port: 8080
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: ""
+  formats:
+    - html
+    - json
+
+outgoing:
+  request_timeout: 5.0
+  max_request_timeout: 10.0

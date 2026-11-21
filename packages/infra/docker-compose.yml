@@ -6,9 +6,12 @@ services:
     container_name: techstack_searxng
     ports:
       - "8080:8080"
+    volumes:
+      - ./searxng:/etc/searxng:rw
     environment:
       - BASE_URL=http://localhost:8080/
       - INSTANCE_NAME=techstack-issues-finder-searxng
+      - SEARXNG_SECRET=techstack_searxng_secret_key_change_in_production
     restart: unless-stopped
 
   crawl4ai:
