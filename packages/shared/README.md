@@ -1,3 +1,3 @@
 # shared
 
-Common schemas and type definitions.
+Shared types and schemas across packages.
