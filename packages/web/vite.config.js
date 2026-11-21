@@ -5,6 +5,24 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    host: true
+    host: true,
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true
+      },
+      '/health': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true
+      },
+      '/research-jobs': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true
+      },
+      '/reports': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true
+      }
+    }
   }
 })
